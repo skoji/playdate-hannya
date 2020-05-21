@@ -1,49 +1,76 @@
 import "CoreLibs/graphics"
 import "CoreLibs/sprites"
+import "hannyatext"
 
 local gfx <const> = playdate.graphics
-local sprite = nil
-
-local hannya = {"観", "自", "在", "菩", "薩", "行", "深", "般", "若", "波", "羅", "蜜", "多", "時", "照", "見", "五", "蘊", "皆", "空", "度", "一", "切", "苦", "厄", "舎", "利", "子", "色", "不", "異", "空", "空", "不", "異", "色", "色", "即", "是", "空", "空", "即", "是", "色", "受", "想", "行", "識", "亦", "復", "如", "是", "舎", "利", "子", "是", "諸", "法", "空", "相", "不", "生", "不", "滅", "不", "垢", "不", "浄", "不", "増", "不", "減", "是", "故", "空", "中", "無", "色", "無", "受", "想", "行", "識", "無", "眼", "耳", "鼻", "舌", "身", "意", "、", "無", "色", "声", "香", "味", "触", "法", "無", "眼", "界", "乃", "至", "無", "意", "識", "界", "無", "無", "明", "亦", "無", "無", "明", "尽", "乃", "至", "無", "老", "死", "亦", "無", "老", "死", "尽", "無", "苦", "集", "滅", "道", "無", "智", "亦", "無", "得", "以", "無", "所", "得", "故", "菩", "提", "薩", "埵", "依", "般", "若", "波", "羅", "蜜", "多", "故", "心", "無", "罜", "礙", "無", "罜", "礙", "故", "無", "有", "恐", "怖", "遠", "離", "一", "切", "顛", "倒", "夢", "想", "究", "竟", "涅", "槃", "三", "世", "諸", "仏", "依", "般", "若", "波", "羅", "蜜", "多", "故", "得", "阿", "耨", "多", "羅", "三", "藐", "三", "菩", "提", "故", "知", "般", "若", "波", "羅", "蜜", "多", "是", "大", "神", "呪", "是", "大", "明", "呪", "是", "無", "上", "呪", "是", "無", "等", "等", "呪", "能", "除", "一", "切", "苦", "真", "実", "不", "虚", "故", "説", "般", "若", "波", "羅", "蜜", "多", "呪", "\n", "即", "説", "呪", "曰", "羯", "諦", "羯", "諦", "波", "羅", "羯", "諦", "波", "羅", "僧", "羯", "諦", "菩", "提", "薩", "婆", "訶"}
-
 
 function fileForChar(c)
    return "images/"..utf8.codepoint(c)..".png"
 end
 
+local initialDistance = 400
+local currentPosition = initialDistance
+local currentChange = 0
+
+function newSpriteFor(count)
+   local char = hannyatext[count]
+   local imageName = fileForChar(char)
+   local image = gfx.image.new(imageName)
+   local initialYpos = 380
+   local initialDistanceDiff = -300
+   local s = gfx.sprite.new()
+   s.go = function(self)
+      self.distance = initialDistance + initialDistanceDiff
+      self.image = image
+      self.xpos = 200
+      self.ypos = initialYpos
+      self:updateScale()
+      self:updatePosition()
+      self:add()
+   end
+
+   s.updateScale = function(self)
+      self.scale = initialDistance / self.distance
+      self:setSize(self.image.width * self.scale, self.image.height * self.scale)
+   end
+
+   s.updatePosition = function(self)
+      self:setCenter(0.5, 0.5)
+      self:moveTo(self.xpos, self.ypos)
+   end
+
+   s.update = function(self)
+      if currentChange ~= 0 then
+         self.distance = self.distance + currentChange * 5
+         self.scale = initialDistance / self.distance
+         self.ypos = initialYpos - (self.distance - (initialDistance + initialDistanceDiff)) * 0.9 * self.scale
+         if self.distance < 50 then
+            self:remove()
+         end
+         self:updateScale()
+         self:updatePosition()
+         local x,y,w,h = self:getBounds()
+         if x+w < 0 or x > 400 or y+h < 0 or y > 240 then
+			self:remove()
+         end
+      end
+   end
+
+   s.draw = function(self, x, y, w, h)
+      self.image:drawScaled(x, y, self.scale)
+   end
+
+   s:go()
+end
+
 function myGameSetUp()
-   local kan = fileForChar("観")
-   local spriteImage = gfx.image.new(kan)
-   sprite = gfx.sprite.new()
-   sprite:setImage( spriteImage )
-   sprite:setCenter( 0.5, 0.5 )
-   sprite:moveTo( 200, 120 )
-   sprite:add() 
-   local ji = fileForChar("自")
-   local spriteImage2 = gfx.image.new(ji)
-   sprite2 = gfx.sprite.new()
-   sprite2:setImage( spriteImage2 )
-   sprite2:setCenter( 0.5, 0.5 )
-   sprite2:moveTo( 200, 120 )
-   sprite2:add() 
+   newSpriteFor(1)
 end
 
 myGameSetUp()
 
-local initialDistance = 400
-local distance = initialDistance
-
-local moveTwo = false
 
 function playdate.update()
-   local change = playdate.getCrankChange()
-   if change ~= 0 then
-      distance = distance + change * 5
-      sprite:setScale(initialDistance / distance)
-      sprite:setCenter( 0.5, 0.5 )
-      local y = 120 - distance * 0.01
-      sprite:moveTo( 200, y )
-   end
+   currentChange = playdate.getCrankChange()
    gfx.sprite.update()
-
 end
