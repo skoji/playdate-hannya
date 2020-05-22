@@ -22,7 +22,8 @@ function newSpriteFor(count)
 
    local imageName = fileForChar(char)
    local image = gfx.image.new(imageName)
-   local initialYpos = 120
+   local ypos = 0
+   local xpos = 0
 
    local s = gfx.sprite.new()
    
@@ -30,9 +31,9 @@ function newSpriteFor(count)
       self.baseZPosition = baseZPosition
       self.zpos = baseZPosition + currentZPosition
       self.image = image
-      self.xpos = 200
+      self.xpos = xpos
       self:updateScale()
-      self.ypos = initialYpos
+      self.ypos = ypos
       self:updatePosition()
       self:add()
    end
@@ -44,7 +45,9 @@ function newSpriteFor(count)
 
    s.updatePosition = function(self)
       self:setCenter(0.5, 0.5)
-      self:moveTo(self.xpos, self.ypos)
+      local x = self.xpos * self.scale + 200
+      local y = self.ypos * self.scale + 120
+      self:moveTo(x, y)
    end
 
    s.update = function(self)
@@ -54,14 +57,11 @@ function newSpriteFor(count)
          if self.zpos < 50 then
             self:remove()
          end
-         self:updateScale()
-         self.ypos = initialYpos
-         
-         self:updatePosition()
-         local x,y,w,h = self:getBounds()
-         if x+w < 0 or x > 400 or y+h < 0 or y > 240 then
-			self:remove()
+         if self.zpos > 8000 then
+            self:remove()
          end
+         self:updateScale()
+         self:updatePosition()
       end
    end
 
@@ -80,7 +80,8 @@ myGameSetUp()
 
 
 function playdate.update()
-   currentChange = playdate.getCrankChange()
+   --   currentChange = playdate.getCrankChange()
+   currentChange = 2
    currentZPosition = currentZPosition + currentChange
    gfx.sprite.update()
 end
