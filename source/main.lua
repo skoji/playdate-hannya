@@ -8,16 +8,17 @@ function fileForChar(c)
    return "images/"..utf8.codepoint(c)..".png"
 end
 
-local screenDistance = 400
-local currentPosition = 100
-local initialPosition = currentPosition
+local screenZPosition = 400
+local currentZPosition = 100
+local initialZPosition = currentZPosition
+local initialScale = screenZPosition / initialZPosition
 local itemDistance = 800
 
 local currentChange = 0
 
 function newSpriteFor(count)
    local char = hannyatext[count]
-   local basePosition = initialPosition - itemDistance * (count - 1)
+   local baseZPosition = initialZPosition - itemDistance * (count - 1)
 
    local imageName = fileForChar(char)
    local image = gfx.image.new(imageName)
@@ -26,8 +27,8 @@ function newSpriteFor(count)
    local s = gfx.sprite.new()
    
    s.go = function(self)
-      self.basePosition = basePosition
-      self.distance = basePosition + currentPosition
+      self.baseZPosition = baseZPosition
+      self.zpos = baseZPosition + currentZPosition
       self.image = image
       self.xpos = 200
       self:updateScale()
@@ -37,7 +38,7 @@ function newSpriteFor(count)
    end
 
    s.updateScale = function(self)
-      self.scale = screenDistance / self.distance
+      self.scale = screenZPosition / self.zpos
       self:setSize(self.image.width * self.scale, self.image.height * self.scale)
    end
 
@@ -48,9 +49,9 @@ function newSpriteFor(count)
 
    s.update = function(self)
       if currentChange ~= 0 then
-         self.distance = self.basePosition + currentPosition
-         self.scale = screenDistance / self.distance
-         if self.distance < 50 then
+         self.zpos = self.baseZPosition + currentZPosition
+         self.scale = screenZPosition / self.zpos
+         if self.zpos < 50 then
             self:remove()
          end
          self:updateScale()
@@ -80,6 +81,6 @@ myGameSetUp()
 
 function playdate.update()
    currentChange = playdate.getCrankChange()
-   currentPosition = currentPosition + currentChange
+   currentZPosition = currentZPosition + currentChange
    gfx.sprite.update()
 end
