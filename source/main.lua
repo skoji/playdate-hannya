@@ -10,7 +10,7 @@ function fileForChar(c)
 end
 
 local screenZPosition = 400
-local currentZPosition = 100
+local currentZPosition = 4000
 local initialZPosition = currentZPosition
 local initialScale = screenZPosition / initialZPosition
 local itemDistance = 500
@@ -22,12 +22,12 @@ function newSpriteFor(count)
    print(count)
    local char = hannyatext[count]
    print(char)
-   local baseZPosition = initialZPosition - itemDistance * (count - 1)
+   local baseZPosition = initialZPosition + itemDistance * (count - 1)
    local imageName = fileForChar(char)
    local image = gfx.image.new(imageName)
    assert(image)
-   local ypos = 0
-   local xpos = 0
+   local ypos = math.random(-120, 120)
+   local xpos = math.random(-200, 200)
    local v = VSprite(baseZPosition, currentZPosition, image, xpos, ypos)
    vsprites[count] = v
 end
