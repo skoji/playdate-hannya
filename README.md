@@ -1,14 +1,17 @@
-# 般若心経ビューア on Playdate
+# Hannya Singyo Viewer on Playdate
 
-## 現状
+## Current Status
 
-各文字にランダムに座標が割り振られ、一定感覚で画面の「奥」から手前に来るように描画している。Aボタンで、自動とクランクモードが切り替わる。
+* Characters comes from “far” side of the screen.
+* Each character has random x and y position. They are equally spaced on z-axis.
+* Two modes:
+  * auto : automatic mode in constant speed
+  * crank : go back and forth in response to the crank
 
-## ロードマップ
+## Roadmap
 
-* 描画パターン
-  * 3Dでの動作パターン
-  * 2Dで縦書きに組む。
-  * 2D時のエフェクト
-* ゲーム化
-  * 正直アイディアがない
+* Drawing pattern
+  * 3D moving pattern variation.
+  * 2D vertical typesetting.
+* What game it will be ?
+  * Do not have any idea for the present.
