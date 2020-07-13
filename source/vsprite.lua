@@ -5,7 +5,7 @@ local gfx <const> = playdate.graphics
 
 class("VSprite").extends(Object)
 
-local screenZpos = 400
+local screenZpos = 400  
 local minZpos = 50
 local maxZpos = 4000
 
@@ -19,7 +19,7 @@ function VSprite:init(baseZpos, currentZpos, image, xpos, ypos)
 end
 
 function VSprite:updateScale()
-   if (self.zpos > 50) then
+   if (self.zpos > minZpos) then
       self.scale = screenZpos / self.zpos
       self.sprite:setSize(self.image.width * self.scale, self.image.height * self.scale)
    else
@@ -45,7 +45,7 @@ function VSprite:activate()
       self.active = true
       self.sprite = gfx.sprite.new()
       self.sprite.draw = function(_, x, y, w, h) 
-         self.image:drawScaled(x, y, self.scale)
+         self.image:drawScaled(0, 0, self.scale) -- something wrong ? in SDK 0.10.2
       end
       self.sprite:add()
    end
@@ -65,7 +65,6 @@ function VSprite:update(currentZpos)
       self:activate()
       self:updateScale()
       self:updatePosition()
-      local x,y,w,h = self.sprite:getBounds()
    else
       self:deactivate()
    end
