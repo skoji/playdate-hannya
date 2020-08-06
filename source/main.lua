@@ -39,6 +39,11 @@ function myGameSetUp()
 end
 
 myGameSetUp()
+gfx.setColor(gfx.kColorWhite)
+gfx.fillRect(0, 0, 400, 240)
+gfx.setBackgroundColor(gfx.kColorWhite)
+gfx.setColor(gfx.kColorBlack)
+
 local messageFont = playdate.graphics.getSystemFont(gfx.font.kVariantBold)
 local textHeight = messageFont:getHeight()
 
