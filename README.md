@@ -34,5 +34,7 @@ make build
 * What game it will be ?
   * Do not have any idea for the present.
 
+# Third-Party Licenses
 
+Source Han Serif Medium JP © Adobe & Google — SIL OFL 1.1 (bitmap subset only)
 
