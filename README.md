@@ -27,7 +27,6 @@ make build
 ## Roadmap
 
 * Voice
-  * read the 
 * Drawing pattern
   * 3D moving pattern variation.
   * 2D vertical typesetting.
