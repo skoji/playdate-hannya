@@ -1,5 +1,7 @@
 # Hannya Singyo Viewer on Playdate
 
+![screen-shot](./screen-shot.gif)
+
 ## Current Status
 
 * Characters comes from “far” side of the screen.
